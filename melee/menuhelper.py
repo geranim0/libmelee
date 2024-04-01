@@ -166,7 +166,7 @@ class MenuHelper():
         controlling_port = controller.port
         if controlling_port not in gamestate.players:
             controller.release_all()
-            return
+            return False
 
         ai_state = gamestate.players[controlling_port]
 
@@ -225,39 +225,42 @@ class MenuHelper():
                 #Move up if we're too low
                 if cursor_y < target_y - wiggleroom:
                     controller.tilt_analog(enums.Button.BUTTON_MAIN, .5, 1)
-                    return
+                    return False
                 #Move down if we're too high
                 if cursor_y > target_y + wiggleroom:
                     controller.tilt_analog(enums.Button.BUTTON_MAIN, .5, 0)
-                    return
+                    return False
                 #Move right if we're too left
                 if cursor_x < target_x - wiggleroom:
                     controller.tilt_analog(enums.Button.BUTTON_MAIN, 1, .5)
-                    return
+                    return False
                 #Move left if we're too right
                 if cursor_x > target_x + wiggleroom:
                     controller.tilt_analog(enums.Button.BUTTON_MAIN, 0, .5)
-                    return
+                    return False
 
                 if gamestate.frame % 2 == 0:
                     controller.press_button(enums.Button.BUTTON_A)
+                    return True
                 else:
                     controller.release_all()
-                return
+                    return False 
             # Select the right CPU level on the slider
             if ai_state.is_holding_cpu_slider:
                 if ai_state.cpu_level > cpu_level:
                     controller.tilt_analog(enums.Button.BUTTON_MAIN, .35, .5)
-                    return
+                    return False
                 if ai_state.cpu_level < cpu_level:
                     controller.tilt_analog(enums.Button.BUTTON_MAIN, .65, .5)
-                    return
+                    return False
                 if ai_state.cpu_level == cpu_level:
                     if gamestate.frame % 2 == 0:
                         controller.press_button(enums.Button.BUTTON_A)
+                        return True
                     else:
                         controller.release_all()
-                return
+                        return False
+                return False
             # Move over to and pick up the CPU slider
             if ai_state.cpu_level != cpu_level:
                 wiggleroom = 1
@@ -266,30 +269,32 @@ class MenuHelper():
                 #Move up if we're too low
                 if cursor_y < target_y - wiggleroom:
                     controller.tilt_analog(enums.Button.BUTTON_MAIN, .5, .8)
-                    return
+                    return False
                 #Move down if we're too high
                 if cursor_y > target_y + wiggleroom:
                     controller.tilt_analog(enums.Button.BUTTON_MAIN, .5, .2)
-                    return
+                    return False
                 #Move right if we're too left
                 if cursor_x < target_x - wiggleroom:
                     controller.tilt_analog(enums.Button.BUTTON_MAIN, .8, .5)
-                    return
+                    return False
                 #Move left if we're too right
                 if cursor_x > target_x + wiggleroom:
                     controller.tilt_analog(enums.Button.BUTTON_MAIN, .2, .5)
-                    return
+                    return False
                 if gamestate.frame % 2 == 0:
                     controller.press_button(enums.Button.BUTTON_A)
+                    return True
                 else:
                     controller.release_all()
-                return
-            return
+                    return False
+                return False
+            return False
 
         # Make sure the port is set to "Human"
         if gamestate.players[controlling_port].controller_status != enums.ControllerStatus.CONTROLLER_HUMAN:
             MenuHelper.change_controller_status(controller, gamestate, controlling_port, enums.ControllerStatus.CONTROLLER_HUMAN)
-            return
+            return False
 
         # We are already set, so let's taunt our opponent
         if character_selected == character and swag and not start:
@@ -317,17 +322,18 @@ class MenuHelper():
             else:
                 y = 0.5 - (y/2)
             controller.tilt_analog(enums.Button.BUTTON_MAIN, x, y)
-            return
+            return True
 
         if character_selected == character and swag and isSlippiCSS:
             if gamestate.frame % 2 == 0:
                 controller.release_all()
-                return
+                return False
             if costume == ai_state.costume:
                 controller.press_button(enums.Button.BUTTON_START)
+                return True
             else:
                 controller.press_button(enums.Button.BUTTON_Y)
-            return
+                return False
 
         #We want to get to a state where the cursor is NOT over the character,
         # but it's selected. Thus ensuring the token is on the character
@@ -337,19 +343,19 @@ class MenuHelper():
         #Don't hold down on B, since we'll quit the menu if we do
         if controller.prev.button[enums.Button.BUTTON_B] == True:
             controller.release_button(enums.Button.BUTTON_B)
-            return
+            return False
 
         #If character is selected, and we're in of the area, and coin is down, then we're good
         if (character_selected == character) and coin_down:
             if gamestate.frame % 2 == 0:
                 controller.release_all()
-                return
+                return True
             if start and (gamestate.ready_to_start == 0):
                 controller.press_button(enums.Button.BUTTON_START)
-                return
+                return True
             else:
                 controller.release_all()
-                return
+                return True
 
         #release start in addition to anything else
         controller.release_button(enums.Button.BUTTON_START)
@@ -367,43 +373,43 @@ class MenuHelper():
                 if gamestate.frame % 5 == 0:
                     controller.press_button(enums.Button.BUTTON_B)
                     controller.release_button(enums.Button.BUTTON_A)
-                    return
+                    return False
                 else:
                     controller.press_button(enums.Button.BUTTON_A)
                     controller.release_button(enums.Button.BUTTON_B)
-                    return
+                    return False
 
             if (character_selected != character) and coin_down:
                 controller.press_button(enums.Button.BUTTON_B)
                 controller.release_button(enums.Button.BUTTON_A)
-                return
+                return False
             #Press A to select our character
             else:
                 if controller.prev.button[enums.Button.BUTTON_A] == False:
                     controller.press_button(enums.Button.BUTTON_A)
-                    return
+                    return False
                 else:
                     controller.release_button(enums.Button.BUTTON_A)
-                    return
+                    return False
         else:
             #Move in
             controller.release_button(enums.Button.BUTTON_A)
             #Move up if we're too low
             if cursor_y < target_y - wiggleroom:
                 controller.tilt_analog(enums.Button.BUTTON_MAIN, .5, 1)
-                return
+                return False
             #Move down if we're too high
             if cursor_y > target_y + wiggleroom:
                 controller.tilt_analog(enums.Button.BUTTON_MAIN, .5, 0)
-                return
+                return False
             #Move right if we're too left
             if cursor_x < target_x - wiggleroom:
                 controller.tilt_analog(enums.Button.BUTTON_MAIN, 1, .5)
-                return
+                return False
             #Move left if we're too right
             if cursor_x > target_x + wiggleroom:
                 controller.tilt_analog(enums.Button.BUTTON_MAIN, 0, .5)
-                return
+                return False
         controller.release_all()
 
     def choose_stage(stage, gamestate, controller):
