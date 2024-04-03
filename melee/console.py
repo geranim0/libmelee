@@ -583,6 +583,9 @@ class Console:
             elif EventType(event_bytes[0]) == EventType.ITEM_UPDATE:
                 self.__item_update(gamestate, event_bytes)
                 event_bytes = event_bytes[event_size:]
+            
+            elif EventType(event_bytes[0]) == EventType.CMD_MENU_FRAME:
+                event_bytes = event_bytes[event_size:]
 
             else:
                 print(
