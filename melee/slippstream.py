@@ -29,6 +29,7 @@ class EventType(Enum):
     FRAME_START = 0x3a
     ITEM_UPDATE = 0x3b
     FRAME_BOOKEND = 0x3c
+    CMD_MENU_FRAME = 0x3e
 
 class CommType(Enum):
     """ Types of SlippiComm messages """
