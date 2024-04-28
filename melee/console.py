@@ -97,6 +97,7 @@ class Console:
         disable_audio=False,
         overclock: Optional[float] = None,
         save_replays=True,
+        rgb_shm_name="rgb_shm"
     ):
         """Create a Console object
 
@@ -176,6 +177,7 @@ class Console:
         self.disable_audio = disable_audio
         self.overclock = overclock
         self.save_replays = save_replays
+        self.rgb_shm_name = rgb_shm_name
 
         # Keep a running copy of the last gamestate produced
         self._prev_gamestate = GameState()
@@ -293,6 +295,10 @@ class Console:
             command.append(iso_path)
         command.append("-u")
         command.append(dolphin_user_path)
+
+        command.append("-r")
+        command.append(self.rgb_shm_name)
+
         env = os.environ.copy()
         if environment_vars is not None:
             env.update(environment_vars)
